@@ -388,6 +388,10 @@ class DocumentInputListView(GeneralListView):
     template = 'index.html'
     name = 'documents'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.result['document_type'] = 'input'
+
 class DocumentInputFormView(GeneralFormView):
 
     model = DocumentInput
@@ -444,6 +448,10 @@ class DocumentOutputListView(GeneralListView):
     model = DocumentOutput
     template = 'index.html'
     name = 'documents'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.result['document_type'] = 'output'
 
 class DocumentOutputDetailView(GeneralView):
 

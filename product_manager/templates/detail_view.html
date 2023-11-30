@@ -13,10 +13,16 @@
                         <td>Вид операції</td>
                         <td>Сума</td>
                         <td>Валюта</td>
-                        <td>Контрагент</td>
-                        <td>Дата вх.</td>
-                        <td>Номер вх.</td>
-                        <td>Договір</td>
+                        {% if document_type == 'input' %}
+                            <td>Контрагент</td>
+                            <td>Дата вх.</td>
+                            <td>Номер вх.</td>
+                            <td>Договір</td>
+                        {% elif document_type == 'output' %}
+                            <td>Організація.</td>
+                            <td>Відповідальний</td>
+                            <td>Договір</td>
+                        {% endif %}
                         <td>Склад</td>
                     </tr>
                     <tr>
@@ -25,10 +31,16 @@
                         <td>{{ document.operation }}</td>
                         <td>{{ document.sum }}</td>
                         <td>{{ document.currency }}</td>
-                        <td>{{ document.contractor }}</td>
-                        <td>{{ document.entry_date }}</td>
-                        <td>{{ document.entry_number }}</td>
-                        <td>{{ document.contract }}</td>
+                        {% if document_type == 'input' %}
+                            <td>{{ document.contractor }}</td>
+                            <td>{{ document.entry_date }}</td>
+                            <td>{{ document.entry_number }}</td>
+                            <td>{{ document.contract }}</td>
+                        {% elif document_type == 'output' %}
+                            <td>{{ document.organization }}</td>
+                            <td>{{ document.contract }}</td>
+                            <td>{{ document.accountable }}</td>
+                        {% endif %}
                         <td>{{ document.storage }}</td>
                     </tr>
                 </table>
@@ -44,6 +56,7 @@
                     <td>% ПДВ</td>
                     <td>Сума ПДВ</td>
                     <td>Рахунок</td>
+                    <td>Индекс товару</td>
                 </tr>
                 {% for product in products %}
                     <tr>
@@ -56,6 +69,7 @@
                         <td>{{ product.tax_rate }}</td>
                         <td>сума с пдв</td>
                         <td>{{ product.bill }}</td>
+                        <td>{{ product.product_index }}</td>
                     </tr>
                 {% endfor %}
             </table>
@@ -107,7 +121,11 @@
                 {% endfor %}
                 {% endif %}
             </table>
-            <a href="{% url 'main' %}">Назад</a>
+            {% if document_type == 'input' %}
+                <a href="{% url 'main' %}">Назад</a>
+            {% elif document_type == 'output' %}
+                <a href="{% url 'document-output' %}">Назад</a>
+            {% endif %}
         </div>
     </body>
     {% load static %}

@@ -32,6 +32,8 @@
     </head>
     <body>
         <div class="main_container">
+            <a href="{% url 'main' %}">Вхідні документи</a>
+            <a href="{% url 'document-output' %}">Вихідні документи</a>
             <p>Список: </p>
                 <table>
                     <tr>
@@ -40,26 +42,44 @@
                         <td>Вид операції</td>
                         <td>Сума</td>
                         <td>Валюта</td>
-                        <td>Контрагент</td>
-                        <td>Дата вх.</td>
-                        <td>Номер вх.</td>
-                        <td>Договір</td>
+                        {% if document_type == 'input' %}
+                            <td>Контрагент</td>
+                            <td>Дата вх.</td>
+                            <td>Номер вх.</td>
+                            <td>Договір</td>
+                        {% elif document_type == 'output' %}
+                            <td>Організація.</td>
+                            <td>Відповідальний</td>
+                            <td>Договір</td>
+                        {% endif %}
                         <td>Склад</td>
                     </tr>
                     {% for document in documents %}
                     <tr>
-                            <td>{{ document.date }}</td>
-                            <td><a href="{% url 'document_input_view' document.id %}">
-                                {{ document.number }}</a>
-                            </td>
-                            <td>{{ document.operation }}</td>
-                            <td>{{ document.sum }}</td>
-                            <td>{{ document.currency }}</td>
+                        <td>{{ document.date }}</td>
+                        {% if document_type == 'input' %}
+                        <td><a href="{% url 'document_input_view' document.id %}">
+                            {{ document.number }}</a>
+                        </td>
+                        {% elif document_type == 'output' %}
+                        <td><a href="{% url 'document_output_view' document.id %}">
+                            {{ document.number }}</a>
+                        </td>
+                        {% endif %}
+                        <td>{{ document.operation }}</td>
+                        <td>{{ document.sum }}</td>
+                        <td>{{ document.currency }}</td>
+                        {% if document_type == 'input' %}
                             <td>{{ document.contractor }}</td>
                             <td>{{ document.entry_date }}</td>
                             <td>{{ document.entry_number }}</td>
                             <td>{{ document.contract }}</td>
-                            <td>{{ document.storage }}</td>
+                        {% elif document_type == 'output' %}
+                            <td>{{ document.organization }}</td>
+                            <td>{{ document.contract }}</td>
+                            <td>{{ document.accountable }}</td>
+                        {% endif %}
+                        <td>{{ document.storage }}</td>
                     </tr>
                     {% endfor %}
                 </table>
