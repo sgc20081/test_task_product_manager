@@ -1,0 +1,14 @@
+# Ignore compiled Python files
+*.pyc
+__pycache__/
+
+# Ignore the virtual environment
+venv/
+
+# Ignore the database file
+db.sqlite3
+
+# Ignore the log file
+# log.txt
+
+# Ignore static users files

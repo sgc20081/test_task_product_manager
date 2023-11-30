@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    </head>
+    <body>
+        <div class="main_container">
+            <p>Список: </p>
+                <table>
+                    <tr>
+                        <td>Дата</td>
+                        <td>Номер</td>
+                        <td>Вид операції</td>
+                        <td>Сума</td>
+                        <td>Валюта</td>
+                        <td>Контрагент</td>
+                        <td>Дата вх.</td>
+                        <td>Номер вх.</td>
+                        <td>Договір</td>
+                        <td>Склад</td>
+                    </tr>
+                    <tr>
+                        <td>{{ document.date }}</td>
+                        <td>{{ document.number }}</td>
+                        <td>{{ document.operation }}</td>
+                        <td>{{ document.sum }}</td>
+                        <td>{{ document.currency }}</td>
+                        <td>{{ document.contractor }}</td>
+                        <td>{{ document.entry_date }}</td>
+                        <td>{{ document.entry_number }}</td>
+                        <td>{{ document.contract }}</td>
+                        <td>{{ document.storage }}</td>
+                    </tr>
+                </table>
+            <p>Product</p>
+            <table>
+                <tr>
+                    <td>Номенклатура</td>
+                    <td>Кількість</td>
+                    <td>Од.</td>
+                    <td>К.</td>
+                    <td>Ціна з ПДВ</td>
+                    <td>Сума з ПДВ</td>
+                    <td>% ПДВ</td>
+                    <td>Сума ПДВ</td>
+                    <td>Рахунок</td>
+                </tr>
+                {% for product in products %}
+                    <tr>
+                        <td>{{ product.nomenclature }}</td>
+                        <td>{{ product.quantity }}</td>
+                        <td>{{ product.units }}</td>
+                        <td>{{ product.coefficient }}</td>
+                        <td>{{ product.price }}</td>
+                        <td>сума с пдв</td>
+                        <td>{{ product.tax_rate }}</td>
+                        <td>сума с пдв</td>
+                        <td>{{ product.bill }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <p>Services</p>
+            <table>
+                <tr>
+                    <td>Номенклатура</td>
+                    <td>Кількість</td>
+                    <td>Ціна з ПДВ</td>
+                    <td>Сума з ПДВ</td>
+                    <td>% ПДВ</td>
+                    <td>Сума ПДВ</td>
+                    <td>Рахунок</td>
+                    <td>Субконто</td>
+                </tr>
+                {% for service in services_input %}
+                    <tr>
+                        <td>{{ service.nomenclature }}</td>
+                        <td>{{ service.quantity }}</td>
+                        <td>{{ service.price }}</td>
+                        <td>сума з пдв</td>
+                        <td>{{ service.tax_rate }}</td>
+                        <td>сума пдв</td>
+                        <td>{{ service.bill }}</td>
+                        <td>{{ service.sub_account }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <a href="{% url 'main' %}">Назад</a>
+        </div>
+    </body>
+    {% load static %}
+    <script src="{% static '/scripts/main.js' %}"></script>
+</html>

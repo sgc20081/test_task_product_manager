@@ -1,0 +1,170 @@
+{% extends "document_create_view.html" %}
+
+{% block table_form %}
+<h2>Products</h2>
+<div class="product_forms_container">
+    {% if product_form.0 is empty %}
+    <div class="product_columns_name" style='display: none'>
+        <div>Номенклатура</div>
+        <div>Кількість</div>
+        <div>Од.</div>
+        <div>К.</div>
+        <div>Ціна з ПДВ</div>
+        <div>Сума з ПДВ</div>
+        <div>% ПДВ</div>
+        <div>Сума ПДВ</div>
+        <div>Рахунок</div>
+        <div>Індекс товару</div>
+    </div>
+    <form action="" class="multi_form_product" id="product" style="display: none">
+        {% csrf_token %}
+        <div>{{ product_form.nomenclature }}</div>
+        <div>{{ product_form.quantity }}</div>
+        <div>{{ product_form.units }}</div>
+        <div>{{ product_form.coefficient }}</div>
+        <div>{{ product_form.price }}</div>
+        <div>сумма</div>
+        <div>{{ product_form.tax_rate }}</div>
+        <div>сумма пдв</div>
+        <div>{{ product_form.bill }}</div>
+        <div>{{ product_form.product_index }}</div>
+        <button class='delete_form'type="button">Видалити</button>
+    </form>
+    {% else %}
+        <div class="product_columns_name">
+            <div>Номенклатура</div>
+            <div>Кількість</div>
+            <div>Од.</div>
+            <div>К.</div>
+            <div>Ціна з ПДВ</div>
+            <div>Сума з ПДВ</div>
+            <div>% ПДВ</div>
+            <div>Сума ПДВ</div>
+            <div>Рахунок</div>
+            <div>Індекс товару</div>
+        </div>
+        {% for product_form in product_form %}
+        <form action="" class="multi_form_product" id="product">
+            {% csrf_token %}
+            <div>{{ product_form.nomenclature }}<br>{{ product_form.nomenclature.errors }}</div>
+            <div>{{ product_form.quantity }}<br>{{ product_form.quantity.errors }}</div>
+            <div>{{ product_form.units }}<br>{{ product_form.units.errors }}</div>
+            <div>{{ product_form.coefficient }}<br>{{ product_form.coefficient.errors }}</div>
+            <div>{{ product_form.price }}<br>{{ product_form.price.errors }}</div>
+            <div>сумма</div>
+            <div>{{ product_form.tax_rate }}<br>{{ product_form.tax_rate.errors }}</div>
+            <div>сумма пдв</div>
+            <div>{{ product_form.bill }}<br>{{ product_form.bill.errors }}</div>
+            <div>{{ product_form.product_index }}<br>{{ product_form.product_index.errors }}</div>
+            <button class='delete_form'type="button">Видалити</button>
+        </form>
+        {% endfor %}
+    {% endif %}
+</div>
+<button class="add_product_button">Додати товар</button>
+<h2>Services</h2>
+{% if document == 'input' %}
+    <div class="service_input_forms_container">
+        {% if service_input_form.0 is empty %}
+            <div class="service_input_columns_name" style='display: none'>
+                <div>Номенклатура</div>
+                <div>Кількість</div>
+                <div>Ціна з ПДВ</div>
+                <div>Сума з ПДВ</div>
+                <div>% ПДВ</div>
+                <div>Сума ПДВ</div>
+                <div>Рахунок</div>
+                <div>Субконто</div>
+            </div>
+        <form action="" class="multi_form_service_input" id="service_input" style="display: none">
+            {% csrf_token %}
+            <div>{{ service_input_form.nomenclature }}</div>
+            <div>{{ service_input_form.quantity }}</div>
+            <div>{{ service_input_form.price }}</div>
+            <div>сумма</div>
+            <div>{{ service_input_form.tax_rate }}</div>
+            <div>сумма пдв</div>
+            <div>{{ service_input_form.bill }}</div>
+            <div>{{ service_input_form.sub_account }}</div>
+            <button class='delete_form'type="button">Видалити</button>
+        </form>
+        {% else %}
+            <div class="service_input_columns_name">
+                <div>Номенклатура</div>
+                <div>Кількість</div>
+                <div>Ціна з ПДВ</div>
+                <div>Сума з ПДВ</div>
+                <div>% ПДВ</div>
+                <div>Сума ПДВ</div>
+                <div>Рахунок</div>
+                <div>Субконто</div>
+            </div>
+            {% for service_input_form in service_input_form %}
+                <form action="" class="multi_form_service_input" id="service_input">
+                    {% csrf_token %}
+                    <div>{{ service_input_form.nomenclature }}<br>{{ service_input_form.nomenclature.errors }}</div>
+                    <div>{{ service_input_form.quantity }}<br>{{ service_input_form.quantity.errors }}</div>
+                    <div>{{ service_input_form.price }}<br>{{ service_input_form.price.errors }}</div>
+                    <div>сумма</div>
+                    <div>{{ service_input_form.tax_rate }}<br>{{ service_input_form.tax_rate.errors }}</div>
+                    <div>сумма пдв</div>
+                    <div>{{ service_input_form.bill }}<br>{{ service_input_form.bille.errors }}</div>
+                    <div>{{ service_input_form.sub_account }}<br>{{ service_input_form.sub_account.errors }}</div>
+                    <button class='delete_form'type="button">Видалити</button>
+                </form>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <button class="add_service_input_button">Додати послугу</button>
+{% elif document == 'output' %}
+    <div class="service_output_forms_container">
+        {% if service_output_form.0 is empty %}
+            <div class="service_output_columns_name" style='display: none'>
+                <div>Номенклатура</div>
+                <div>Зміст послуги, доп. відомості</div>
+                <div>Кількість</div>
+                <div>Ціна без ПДВ</div>
+                <div>Сума без знижки</div>
+                <div>Знижка</div>
+                <div>Рахунок</div>
+            </div>
+            <form action="" class="multi_form_service_output" id="service_output" style="display: none">
+                {% csrf_token %}
+                <div>{{ service_output_form.nomenclature }}</div>
+                <div>{{ service_output_form.description }}</div>
+                <div>{{ service_output_form.quantity }}</div>
+                <div>{{ service_output_form.price }}</div>
+                <div>сумма без знижки</div>
+                <div>{{ service_output_form.discount }}</div>
+                <div>{{ service_output_form.bill }}</div>
+                <button class='delete_form'type="button">Видалити</button>
+            </form>
+        {% else %}
+            <div class="service_output_columns_name">
+                <div>Номенклатура</div>
+                <div>Зміст послуги, доп. відомості</div>
+                <div>Кількість</div>
+                <div>Ціна без ПДВ</div>
+                <div>Сума без знижки</div>
+                <div>Знижка</div>
+                <div>Рахунок</div>
+            </div>
+        {% for service_output_form in service_output_form %}
+            <form action="" class="multi_form_service_output" id="service_output">
+                {% csrf_token %}
+                <div>{{ service_output_form.nomenclature }}<br>{{ service_output_form.nomenclature.errors }}</div>
+                <div>{{ service_output_form.description }}<br>{{ service_output_form.description.errors }}</div>
+                <div>{{ service_output_form.quantity }}<br>{{ service_output_form.quantity.errors }}</div>
+                <div>{{ service_output_form.price }}<br>{{ service_output_form.price.errors }}</div>
+                <div>сумма без знижки</div>
+                <div>{{ service_output_form.discount }}<br>{{ service_output_form.discount.errors }}</div>
+                <div>{{ service_output_form.bill }}<br>{{ service_output_form.bill.errors }}</div>
+                <button class='delete_form'type="button">Видалити</button>
+            </form>
+        {% endfor %}
+    {% endif %}
+    </div>
+    <button class="add_service_output_button">Додати послугу</button>
+{% endif %}
+
+{% endblock %}

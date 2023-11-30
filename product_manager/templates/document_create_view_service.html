@@ -1,0 +1,33 @@
+{% extends 'document_create_view.html' %}
+
+{% block table_form%}
+<p>Services</p>
+    <table>
+        <tr>
+            <td>Номенклатура</td>
+            <td>Кількість</td>
+            <td>Ціна з ПДВ</td>
+            <td>Сума з ПДВ</td>
+            <td>% ПДВ</td>
+            <td>Сума ПДВ</td>
+            <td>Рахунок</td>
+            <td>Субконто</td>
+        </tr>
+    </table>
+            <form action="" class="multi_form" id="service_0" style="display: none">
+                <table>
+                    <tr>
+                    {% csrf_token %}
+                    <td>{{ service_form.nomenclature }}</td>
+                    <td>{{ service_form.quantity }}</td>
+                    <td>{{ service_form.price }}</td>
+                    <td>сума з пдв</td>
+                    <td>{{ service_form.tax_rate }}</td>
+                    <td>сума пдв</td>
+                    <td>{{ service_form.bill }}</td>
+                    <td>{{ service_form.sub_account }}</td>
+                    </tr>
+                </table>
+            </form>
+    <button class="add_service_button">Добавить услугу</button>
+{% endblock %}

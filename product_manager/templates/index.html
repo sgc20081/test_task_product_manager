@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <style>
+            html {
+                box-sizing: border-box;
+            }
+            *, *::before, *::after {
+                box-sizing: inherit;
+            }
+            table {
+                border-collapse: collapse;
+                display: grid;
+            }
+            td, .product_columns_name div, .multi_form_product > *, .service_input_columns_name div, .multi_form_service_input > *, .service_output_columns_name div, .multi_form_service_output > * {
+                border: 2px solid black;
+                padding: 5px;
+            }
+            .product_forms_container, .service_input_forms_container, .service_output_forms_container{
+                width: max-content;
+                border-collapse: collapse;
+            }
+            .product_columns_name div, .multi_form_product > *, .service_input_columns_name div, .multi_form_service_input > *, .service_output_columns_name div, .multi_form_service_output > *{
+                display: inline-block;
+                width: 150px;
+            }
+            .multi_form_product input, .multi_form_service_input input, .multi_form_service_output input{
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main_container">
+            <p>Список: </p>
+                <table>
+                    <tr>
+                        <td>Дата</td>
+                        <td>Номер</td>
+                        <td>Вид операції</td>
+                        <td>Сума</td>
+                        <td>Валюта</td>
+                        <td>Контрагент</td>
+                        <td>Дата вх.</td>
+                        <td>Номер вх.</td>
+                        <td>Договір</td>
+                        <td>Склад</td>
+                    </tr>
+                    {% for document in documents %}
+                    <tr>
+                            <td>{{ document.date }}</td>
+                            <td><a href="{% url 'document_input_view' document.id %}">
+                                {{ document.number }}</a>
+                            </td>
+                            <td>{{ document.operation }}</td>
+                            <td>{{ document.sum }}</td>
+                            <td>{{ document.currency }}</td>
+                            <td>{{ document.contractor }}</td>
+                            <td>{{ document.entry_date }}</td>
+                            <td>{{ document.entry_number }}</td>
+                            <td>{{ document.contract }}</td>
+                            <td>{{ document.storage }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            <a href="{% url 'create-document-input' %}">Сторити вхідний документ</a>
+            <a href="{% url 'create-document-output' %}">Сторити вихідний документ</a>
+        </div>
+    </body>
+    {% load static %}
+    <script src="{% static '/scripts/main.js' %}"></script>
+</html>

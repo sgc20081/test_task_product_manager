@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    </head>
+    <body>
+        <div class="main_container">
+            <p>Список: </p>
+            {% if document == 'input' %}
+                <form action="create-document-input" id="document_input_form">
+            {% elif document == 'output' %}
+                <form action="create-document-output" id="document_output_form">
+            {% endif %}
+                <table>
+                    <tr>
+                        <td>Дата</td>
+                        <td>Номер</td>
+                        <td>Вид операції</td>
+                        <td>Сума</td>
+                        <td>Валюта</td>
+                        {% if document == 'input' %}
+                            <td>Контрагент</td>
+                            <td>Дата вх.</td>
+                            <td>Номер вх.</td>
+                            <td>Договір</td>
+                        {% elif document == 'output' %}
+                            <td>Організація.</td>
+                            <td>Відповідальний</td>
+                            <td>Договір</td>
+                        {% endif %}
+                        <td>Склад</td>
+                    </tr>
+                    <tr>
+                        {% csrf_token %}
+                        <td><input name="date" required="" id="id_date" type="date" value="{{ document_form.date.value }}"></td>
+                        <td>{{ document_form.number }}<br>{{ document_form.number.errors }}</td>
+                        <td>{{ document_form.operation }}<br>{{ document_form.operation.errors }}</td>
+                        <td>{{ document_form.sum }}<br>{{ document_form.sum.errors }}</td>
+                        <td>{{ document_form.currency }}<br>{{ document_form.currency.errors }}</td>
+                        {% if document == 'input' %}
+                            <td>{{ document_form.contractor }}<br>{{ document_form.contractor.errors }}</td>
+                            <td>{{ document_form.entry_date }}<br>{{ document_form.entry_date.errors }}</td>
+                            <td>{{ document_form.entry_number }}<br>{{ document_form.entry_number.errors }}</td>
+                            <td>{{ document_form.contract }}<br>{{ document_form.contract.errors }}</td>
+                        {% elif document == 'output' %}
+                            <td>{{ document_form.organization }}<br>{{ document_form.organization.errors }}</td>
+                            <td>{{ document_form.contract }}<br>{{ document_form.contract.errors }}</td>
+                            <td>{{ document_form.accountable }}<br>{{ document_form.accountable.errors }}</td>
+                        {% endif %}
+                        <td>{{ document_form.storage }}<br>{{ document_form.storage.errors }}</td>
+                    </tr>
+                </table>
+            </form>
+            {% block table_form %}
+            {% endblock %}
+            {% if document == 'input' %}
+                <button class="document_input_send_forms_btn">Отправить формы</button>
+            {% elif document == 'output' %}
+                <button class="document_output_send_forms_btn">Отправить формы</button>
+            {% endif %}
+            <a href="{% url 'main' %}">Назад</a>
+            <div class="django_variable" id="document" document='{{ document }}'></div>
+        </div>
+    </body>
+    {% load static %}
+    <script src="{% static '/scripts/main.js' %}"></script>
+</html>
