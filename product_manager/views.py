@@ -698,8 +698,11 @@ class MultiForms(GeneralView):
     """
     template = None
     additional_result_data = None
-    forms_error = False
     html_response_class = None
+
+    def __init__(self, *args, **kwargs):
+        self.forms_error = False
+        super().__init__(*args, **kwargs)
 
     def get_request_data(self, *args, **kwargs):
 
@@ -740,7 +743,7 @@ class MultiForms(GeneralView):
                             else:
                                 self.result[form] = [self.forms[form]()]
                                 self.result[form].append(form_obj['errors'])
-                        
+                        print('==========ОШИБКИ==========', form_obj)
                         self.forms_error = True
                     else:
                         if not mutli_form:
@@ -813,6 +816,7 @@ class MultiForms(GeneralView):
 
     def response(self, *args, **kwargs):
         if self.forms_error:
+            print('Есть ошибки в формах: ', self.forms_error)
             return super().response()
         else:
             print('Ответ идёт заданым методом')
@@ -870,7 +874,7 @@ class DocumentOutputMultiForms(MultiForms):
     def additional_errors(self, form, fields, *args, **kwargs):
 
         if form == 'product_form' and 'quantity' in fields:
-
+            print('Запуск обработки количества товара в остатке и запросе')
             if isinstance(fields['quantity'], str) and fields['quantity'] != '':
                 quantity = Decimal(fields['quantity'])
             else:
@@ -880,6 +884,7 @@ class DocumentOutputMultiForms(MultiForms):
             total_balance = queryset.aggregate(sum_balance=Sum('balance'))
             
             if quantity > total_balance['sum_balance']:
+                print('Товара не хватает на складе')
                 form_obj = self.forms[form]
                 form_obj = GeneralFormViewClassy.check_valid(form=form_obj, data=fields)
                 form_obj['errors'].add_error('quantity', 'Не хватает товара на складе')
@@ -890,6 +895,7 @@ class DocumentOutputMultiForms(MultiForms):
                     'queryset': queryset,
                     'quantity': quantity
                     })
+                print('В обработку остатка и запросов товара будут добавлені следующие элементы: ', self.product_balance_parameters)
                 return None
 
     def set_product_balance(self, *args, **kwargs):
@@ -918,24 +924,3 @@ class DocumentOutputMultiForms(MultiForms):
     def multi_form_post(self, *args, **kwargs):
         self.set_product_balance()
         return super().multi_form_post(*args, **kwargs)
-
-        # try:
-        #     print('Название: ', obj.nomenclature, ' ===Дата: ', obj.document_product_input.date, 'количество: ', obj.balance)
-        #     print('Запрос количества товара: ', quantity)
-        #     if quantity <= obj.balance:
-        #         print('Товара хватает, остаток в позиции: ', obj.balance - quantity)
-        #         # Здесь надо будет сделать пересохранение данной модели с новым балансом
-        #         print('Поля формы: ', fields)
-        #         obj.balance = obj.balance - quantity
-        #         obj.save()
-        #         return 'break'
-        #     else:
-        #         print('Товара не хватает, в следующую позицию будет передано: ', quantity - obj.balance)
-        #         # Здесь реализовать сохранение нулевого баланса в модель продукта
-        #         result = quantity - obj.balance
-        #         obj.balance = 0
-        #         obj.save()
-        #         return result
-        # except AttributeError:
-        #     print('Ошибка. Отсутвует связанный документ')
-        #     return quantity

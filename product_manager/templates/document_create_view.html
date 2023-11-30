@@ -32,7 +32,7 @@
                     </tr>
                     <tr>
                         {% csrf_token %}
-                        <td><input name="date" required="" id="id_date" type="date" value="{{ document_form.date.value }}"></td>
+                        <td><input name="date" required="" id="id_date" type="date" value="{{ document_form.date.value }}"><br>{{ document_form.date.errors }}</td>
                         <td>{{ document_form.number }}<br>{{ document_form.number.errors }}</td>
                         <td>{{ document_form.operation }}<br>{{ document_form.operation.errors }}</td>
                         <td>{{ document_form.sum }}<br>{{ document_form.sum.errors }}</td>
