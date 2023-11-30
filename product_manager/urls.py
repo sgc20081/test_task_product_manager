@@ -9,7 +9,7 @@ urlpatterns = [
     path('create-document-input', views.DocumentInputProductFormView.as_view, name='create-document-input'),
     path('create-document-output', views.DocumentOutputProductFormView.as_view, name='create-document-output'),
     path('multi-form-document-input', views.DocumentInputMultiForms.as_view,),
-    # path('multi-form-document-output', views.DocumentOutputMultiForms.as_view,),
+    path('multi-form-document-output', views.DocumentOutputMultiForms.as_view,),
 ]
 
 urlpatterns += [

@@ -747,8 +747,14 @@ class MultiForms(GeneralView):
                     mutli_form = False
 
                 if form in self.forms:
-                    form_obj = self.forms[form]
-                    form_obj = GeneralFormViewClassy.check_valid(form=form_obj, data=fields)
+
+                    additional_errors = self.additional_errors(form, fields)
+
+                    if additional_errors != None:
+                        form_obj = additional_errors
+                    else:
+                        form_obj = self.forms[form]
+                        form_obj = GeneralFormViewClassy.check_valid(form=form_obj, data=fields)
                     if 'errors' in form_obj:
                         if not mutli_form:
                             self.result[form] = form_obj['errors']
@@ -830,9 +836,14 @@ class MultiForms(GeneralView):
                         GeneralFormViewClassy.post(form=form_obj, data=fields)
                 else:
                     raise KeyError(f"Форма {form} не обнаружена, либо не была указана")
-            
+    
+    def additional_errors(self, form, fields, *args, **kwargs):
+        # Этот метод будет использоваться если в дочернем классе в форму и поля нужно будет
+        # добавить дополнительные ошибки для вывода
+        return None
+
     def additional_actions_for_post(self, form, fields, *args, **kwargs):
-        # Этот метод будет использоваться если в дочернем классе в формой и полями нужно будет провести
+        # Этот метод будет использоваться если в дочернем классе c формой и полями нужно будет провести
         # дополнительные действия перед сохранением в базу данных
         pass
 
@@ -843,57 +854,6 @@ class MultiForms(GeneralView):
             print('Ответ идёт заданым методом')
             print('Foreing объект: ', self.foreign_object)
             return self.html_response_class.as_view(self.request, pk=self.foreign_object.pk)
-
-    # def form_validation_check(self, *args, **kwargs):
-    #     form_view = self.forms[kwargs['model']]
-    #     form_check = form_view.check_valid(form_view, form=form_view.form, initial=kwargs['fields'])
-    #     # print(form_check['error'])
-    #     if 'error' in form_check:
-    #         if kwargs['model'] == kwargs['multi_form']:
-    #             print('результат мульти модель')
-    #             if kwargs['model'] in self.result:
-    #                 if isinstance(self.result[kwargs['model']], list):
-    #                     print('СПИСОК УЖЕ ЕСТЬ')
-    #                     self.result[kwargs['model']].append(form_check['error'])
-    #                     print('ЭТО ВНЕСЛИ В СУЩЕСТВУЮЩИЙ СПИСОК: ', self.result[kwargs['model']])
-    #                     print(self.result)
-    #             else:
-    #                 print('СПИСКА ЕЩЁ НЕТ')
-    #                 self.result[kwargs['model']] = [form_check['error'].__class__()]
-    #                 self.result[kwargs['model']].append(form_check['error'])
-    #                 print('ЭТО ВНЕСЛИ В НЕ СУЩЕСТВУЮЩИЙ СПИСОК: ', self.result[kwargs['model']])
-    #                 print(self.result)
-    #         elif kwargs['multi_form'] == None:
-    #             print('результат НЕ мульти модель')
-    #             self.result[kwargs['model']] = form_check['error']
-    #         self.forms_error = True
-    #     else:
-    #         if kwargs['model'] == kwargs['multi_form']:
-    #             if kwargs['model'] in self.result:
-    #                 if isinstance(self.result[kwargs['model']], list):
-    #                     self.result[kwargs['model']] = self.result[kwargs['model']].append(form_check)
-    #             else:
-    #                 self.result[kwargs['model']] = [form_check.__class__()]
-    #                 self.result[kwargs['model']].append(form_check)
-    #         else:
-    #             self.result[kwargs['model']] = form_check
-
-    # def multi_form_post(self, *args, **kwargs):
-    #     print('============Запущен метод поста мультиформы============')
-    #     if kwargs['model'] == self.foreign_object:    # Проверка на то, является ли модель foreign для другой модели
-    #         self.foreign_object = kwargs['form_view'].create_and_get(kwargs['form_view'], form=kwargs['form_view'].form, initial=kwargs['fields'])
-    #         print('Записан FOREIGN OBJECT: ', self.foreign_object)
-    #     elif kwargs['model'] in self.related_object:  # Проверка на то, есть ли у модели foreign связь с другой моделью
-    #         print('Используется FOREIGN OBJECT: ', self.foreign_object)
-    #         kwargs['fields'][self.related_object[kwargs['model']]] = self.foreign_object
-    #         print('Связанное поле: ', self.related_object[kwargs['model']])
-    #         kwargs['form_view'].post(kwargs['form_view'], form=kwargs['form_view'].form, initial=kwargs['fields'])
-    #     else:
-    #         kwargs['form_view'].post(kwargs['form_view'], form=kwargs['form_view'].form, initial=kwargs['fields'])
-    #         print('Обнаружена форма: ', kwargs['form_view'])
-    #         for key, value in kwargs['fields'].items():
-    #             print(f"{key}: {value}")
-
         
     @classonlymethod
     def as_view(cls, *args, **kwargs):
@@ -919,9 +879,137 @@ class DocumentInputMultiForms(MultiForms):
     html_response_class = DocumentInputDetailView
 
     def additional_actions_for_post(self, form, fields, *args, **kwargs):
-        print('Запущен метод дополнительных действий в дочернем методе')
-        print('Form: ', form)
-        print('Fields: ', fields)
         if form == 'product_form' and 'quantity' in fields:
             fields['balance'] = fields['quantity']
             return {'fields': fields}
+    
+class DocumentOutputMultiForms(MultiForms):
+
+    forms = {'document_form': DocumentOutputForm,
+            'product_form': ProductForm,
+            'service_output_form': ServiceOutputForm}
+
+    foreign_object = 'document_form'
+    related_object = {
+        'product_form': 'document_product_output',
+        'service_output_form': 'document_service_output'}
+    
+    template = 'document_create_view_product.html'
+
+    additional_result_data = {'document': 'output'}
+    html_response_class = DocumentOutputDetailView
+
+    # def request_data(self, *args, **kwargs):
+    #     print('Запущена обработка данных мультиформы для создания исходящей декларации')
+    #     print(self.request.POST)
+    #     # Копирование данных поля количества товара в поле остатка товара
+    #     for req in self.request.POST:
+    #         req = json.loads(req)
+        
+    #     for model, fields in req.items():
+    #         if '_ind_form_' in model:
+    #             model_name = model[:model.find('_ind_form_')]
+    #             multi_form = model_name
+    #         else:
+    #             model_name = model
+    #             multi_form = None
+
+    #         self.form_validation_check(model=model_name, multi_form=multi_form, fields=fields)
+    #         self.result['document'] = 'output'
+
+    #         if self.forms_error:
+    #             continue
+
+    #         if model_name == 'product_form' and 'quantity' in fields:
+    #             print('Количество товара который должен отпускаться на продажу: ', fields['quantity'])
+    #             print('Индекс товара: ', fields['product_index'])
+                
+    #             queryset = Product.objects.filter(Q(product_index=fields['product_index']) & ~Q(balance=0)).order_by('document_product_input__date')
+    #             print('Отсортированные продукты по дате деклараций: ', queryset)
+    #             total_balance = queryset.aggregate(sum_balance=Sum('balance'))
+    #             print('Total balance', total_balance)
+    #             print('Total balane key', total_balance['sum_balance'])
+    #             quantity = int(fields['quantity'])
+    #             if quantity > total_balance['sum_balance']:
+    #                 print('Товара на складе не хватает')
+    #                 form = self.forms[model_name].form(data=fields)
+    #                 form.add_error('quantity', 'Не хватает товара на складе')
+    #                 if isinstance(self.result[model_name], list):
+    #                     print('Формы уже идёт списком')
+    #                     self.result[model_name].append(form)
+    #                 else:
+    #                     print('Создаю новый список')
+    #                     self.result[model_name] = [form]
+    #                 continue
+    #             for obj in queryset:
+    #                 print('Quantity: ', quantity)
+    #                 result = self.get_product_balance(quantity, obj, fields)
+    #                 if result == 'break':
+    #                     break
+    #                 else:
+    #                     print('ЭТО ТО, ЧТО ВЕРНУЛА ФУНКЦИЯ: ', result)
+    #                     quantity = result
+
+    #             # query = QueryDict(json.dumps(req), mutable=True)
+    #             # self.request.POST = query
+
+    #     if not self.forms_error:
+    #         super().request_data(*args, **kwargs)
+
+    # def response(self, *args, **kwargs):
+    #     if 'result' in kwargs:
+    #         print('Результаты ответа сервера', kwargs['result'])
+    #         return kwargs['result']
+    #     return DocumentOutputDetailView.as_view(self.request, pk=self.foreign_object.pk)
+
+    def additional_errors(self, form, fields, *args, **kwargs):
+
+        if form == 'product_form' and 'quantity' in fields:
+
+            if isinstance(fields['quantity'], str) and fields['quantity'] != '':
+                quantity = float(fields['quantity'])
+            else:
+                return None
+
+            queryset = Product.objects.filter(Q(product_index=fields['product_index']) & ~Q(balance=0)).order_by('document_product_input__date')
+            total_balance = queryset.aggregate(sum_balance=Sum('balance'))
+            
+            if quantity > total_balance['sum_balance']:
+                form_obj = self.forms[form]
+                form_obj = GeneralFormViewClassy.check_valid(form=form_obj, data=fields)
+                print('Товара на складе не хватает')
+                form_obj['errors'].add_error('quantity', 'Не хватает товара на складе')
+                print('Этот объект будет возвращён: ', form_obj)
+                return form_obj
+            else:
+                return None
+
+    def get_product_balance(self, quantity, obj, fields):
+        try:
+            print('Название: ', obj.nomenclature, ' ===Дата: ', obj.document_product_input.date, 'количество: ', obj.balance)
+            print('Запрос количества товара: ', quantity)
+            form = ProductForm(fields)
+                # print('ФОРМА: ', form)
+            if form.is_valid():
+                print('+++Данные формы заполнены верно+++')
+                if quantity <= obj.balance:
+                    print('Товара хватает, остаток в позиции: ', obj.balance - quantity)
+                    # Здесь надо будет сделать пересохранение данной модели с новым балансом
+                    print('Поля формы: ', fields)
+                    obj.balance = obj.balance - quantity
+                    obj.save()
+                    return 'break'
+                else:
+                    print('Товара не хватает, в следующую позицию будет передано: ', quantity - obj.balance)
+                    # Здесь реализовать сохранение нулевого баланса в модель продукта
+                    result = quantity - obj.balance
+                    obj.balance = 0
+                    obj.save()
+                    return result
+            else:
+                for e, i in form.errors.items():
+                    print('Ошибка', e, i)
+                print('---Данные формы заполнены не верно---')
+        except AttributeError:
+            print('Ошибка. Отсутвует связанный документ')
+            return quantity
