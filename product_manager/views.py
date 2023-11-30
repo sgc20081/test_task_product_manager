@@ -410,7 +410,8 @@ class DocumentInputDetailView(GeneralView):
         self.result = {
             'document': document,
             'products': products,
-            'services_input': services_input}
+            'services_input': services_input,
+            'document_type': 'input'}
 
         return super().response()
 
@@ -431,51 +432,6 @@ class DocumentInputProductFormView(GeneralView):
             'document': 'input'}
         
         return super().response()
-
-# class DocumentInputMultiForms(MultiForms):
-
-#     foreign_object = 'document_form'
-#     related_object = {
-#         'product_form': 'document_product_input',
-#         'service_input_form': 'document_service_input'}
-
-
-#     forms = {'document_form': DocumentInputFormView(),
-#              'product_form': ProductFormView(),
-#              'service_input_form': ServiceInputFormView()}
-
-#     template = 'document_create_view_product.html'
-
-#     def request_data(self, *args, **kwargs):
-#         # Копирование данных поля количества товара в поле остатка товара
-#         for req in self.request.POST:
-#             req = json.loads(req)
-        
-#         for model, fields in req.items():
-
-#             if '_ind_form_' in model:
-#                 model = model[:model.find('_ind_form_')]
-#                 multi_form = model
-#             else:
-#                 multi_form = None
-
-#             if model == 'product_form' and 'quantity' in fields:
-#                 fields['balance'] = fields['quantity']
-
-#                 query = QueryDict(json.dumps(req), mutable=True)
-#                 self.request.POST = query
-
-#             self.form_validation_check(model=model, multi_form=multi_form, fields=fields)
-#             self.result['document'] = 'input'
-
-#         if not self.forms_error:
-#             super().request_data(*args, **kwargs)
-
-#     def response(self, *args, **kwargs):
-#         if not self.forms_error:
-#             return DocumentInputDetailView.as_view(self.request, pk=self.foreign_object.pk)
-#         else:
-#             return super().response()
 
 
 """
@@ -502,7 +458,7 @@ class DocumentOutputDetailView(GeneralView):
             'document': document, 
             'products': products, 
             'services_output': services_output,
-            'document_typpe': 'output'}
+            'document_type': 'output'}
         return super().response()
 
 class DocumentOutputFormView(GeneralFormView):

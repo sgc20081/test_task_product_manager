@@ -61,6 +61,7 @@
             </table>
             <p>Services</p>
             <table>
+                {% if document_type == 'input' %}
                 <tr>
                     <td>Номенклатура</td>
                     <td>Кількість</td>
@@ -83,6 +84,28 @@
                         <td>{{ service.sub_account }}</td>
                     </tr>
                 {% endfor %}
+                {% elif document_type == 'output' %}
+                <tr>
+                    <td>Номенклатура</td>
+                    <td>Зміст послуги, доп. відомості</td>
+                    <td>Кількість</td>
+                    <td>Ціна без ПДВ</td>
+                    <td>Сума без знижки</td>
+                    <td>Знижка</td>
+                    <td>Рахунок</td>
+                </tr>
+                {% for service in services_output %}
+                <tr>
+                    <td>{{ service.nomenclature }}</td>
+                    <td>{{ service.description }}</td>
+                    <td>{{ service.quantity }}</td>
+                    <td>{{ service.price }}</td>
+                    <td>сума без знижки</td>
+                    <td>{{ service.discount }}</td>
+                    <td>{{ service.bill }}</td>
+                </tr>
+                {% endfor %}
+                {% endif %}
             </table>
             <a href="{% url 'main' %}">Назад</a>
         </div>
