@@ -85,7 +85,8 @@ class GeneralListView(GeneralView):
             raise TypeError(f"<{self.__class__.__name__}> must contain model")
         
     @classonlymethod
-    def filter_query(self, *args, **kwargs): # возможность будущей реализации фильра данных
+    def filter_query(self, *args, **kwargs):
+        print('поступил запрос на получение списка с фильтрацией данных ', kwargs)
         if 'filter' in kwargs:
             return self.model.objects.filter(**kwargs['filter'])
     
@@ -326,7 +327,6 @@ class ProductListView(GeneralListView):
 
     model = Product
     name = 'products'
-    # template = 'detail_view.html'
 
 class ProductFormView(GeneralFormView):
 
@@ -496,8 +496,13 @@ class DocumentOutputDetailView(GeneralView):
     def response(self, *args, **kwargs):
 
         document = DocumentOutput.objects.get(pk=kwargs['pk'])
-        products = ProductListView.filter_query(filter={'document_product_input_id': kwargs['pk']})
-        self.result = {'document': document, 'products': products}
+        products = ProductListView.filter_query(filter={'document_product_output_id': kwargs['pk']})
+        services_output = ServiceOutputListView.filter_query(filter={'document_service_output_id': kwargs['pk']})
+        self.result = {
+            'document': document, 
+            'products': products, 
+            'services_output': services_output,
+            'document_typpe': 'output'}
         return super().response()
 
 class DocumentOutputFormView(GeneralFormView):
