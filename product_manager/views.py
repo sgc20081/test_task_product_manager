@@ -930,8 +930,9 @@ class ProductBalanceView(GeneralView):
     template = 'products_balance.html'
 
     def __init__(self, *args, **kwargs):
-        self.product_indexes = []
-        self.products_balance = []
+        self.product_indexes = {}
+        self.products_balance = {}
+        self.storage = []
         super().__init__(*args, **kwargs)
     
     def response(self, *args, **kwargs):
@@ -939,20 +940,40 @@ class ProductBalanceView(GeneralView):
         print('Остаток товара: ', products)
         for product in products:
 
-            if product.product_index not in self.product_indexes:
-                print('имеющийся список: ', self.product_indexes)
-                self.product_indexes.append(product.product_index)
-                products_by_index = Product.objects.filter(product_index=product.product_index)
-                products_sum_price = products_by_index.aggregate(sum=Sum('price'))
-                products_sum_quantity = products_by_index.aggregate(sum=Sum('quantity'))
-                # print(f'Продукты по индексу {product.product_index}: {products_sum_quantity["sum"]}, на сумму: {products_sum_price["sum"]}')
+            storage = product.document_product_input.storage
 
-                self.products_balance.append({
+            if storage.storage not in self.product_indexes:
+                self.product_indexes[storage.storage] = []
+            
+            if product.product_index not in self.product_indexes[storage.storage]:
+                
+                print('имеющийся список: ', self.product_indexes)
+                print('Склад: ', product.document_product_input.storage)
+                self.product_indexes[storage.storage].append(product.product_index)
+                
+                products_by_index = Product.objects.filter(product_index=product.product_index, document_product_input__storage=storage)
+                products_sum_price = products_by_index.aggregate(sum=Sum('price'))
+                products_sum_quantity = products_by_index.aggregate(sum=Sum('balance'))
+
+                products_balance_storage = {
                     'name': product.nomenclature,
                     'quantity': products_sum_quantity['sum'],
                     'price': products_sum_price['sum'],
                     'index': product.product_index
-                    })
+                    }
+
+                if storage.storage not in self.products_balance:
+                    self.products_balance[storage.storage] = [products_balance_storage]
+                else:
+                    self.products_balance[storage.storage].append(products_balance_storage)
+        
+
+                # self.products_balance.append({
+                #     'name': product.nomenclature,
+                #     'quantity': products_sum_quantity['sum'],
+                #     'price': products_sum_price['sum'],
+                #     'index': product.product_index
+                #     })
         
         self.result['products_balance'] = self.products_balance
 

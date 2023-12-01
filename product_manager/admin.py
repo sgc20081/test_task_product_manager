@@ -2,6 +2,11 @@ from django.contrib import admin
 from .models import *
 # Register your models here.
 
+class StorageInlineAdmin(admin.TabularInline):
+    
+    model = Storage
+    extra = 0
+
 class ProductInlineAdmin(admin.TabularInline):
     
     model = Product
@@ -30,5 +35,6 @@ class DocumentOutputAdmin(admin.ModelAdmin):
 admin.site.register(DocumentInput, DocumentInputAdmin)
 admin.site.register(DocumentOutput, DocumentOutputAdmin)
 admin.site.register(Product)
+admin.site.register(Storage)
 admin.site.register(ServiceInput)
 admin.site.register(ServiceOutput)

@@ -13,13 +13,18 @@
                     <td>Сума</td>
                     <td>Індекс товару</td>
                 </tr>
-                {% for product in products_balance %}
+                {% for storage, products in products_balance.items %}
+                    <tr>
+                        <td style="font-weight: bold;">{{ storage }}</td>
+                    </tr>
+                    {% for product in products %}
                     <tr>
                         <td>{{ product.name }}</td>
                         <td>{{ product.quantity }}</td>
                         <td>{{ product.price }}</td>
                         <td>{{ product.index }}</td>
                     </tr>
+                    {% endfor %}
                 {% endfor %}
             </table>
             <a href="{% url 'main' %}">Назад</a>
