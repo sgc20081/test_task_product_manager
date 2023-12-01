@@ -5,7 +5,7 @@ from . import views
 urlpatterns = [
     path('', views.DocumentInputListView.as_view, name='main'),
     path('document-output', views.DocumentOutputListView.as_view, name='document-output'),
-    # path('test', views.DocumentProductDetailView.as_view, name='general')
+    path('products-balance', views.ProductBalanceView.as_view, name='products-balance'),
     path('create-document-input', views.DocumentInputProductFormView.as_view, name='create-document-input'),
     path('create-document-output', views.DocumentOutputProductFormView.as_view, name='create-document-output'),
     path('multi-form-document-input', views.DocumentInputMultiForms.as_view,),

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    </head>
+    <body>
+        <div class="main_container">
+            <h2>Залишок товару: </h2>
+            <table>
+                <tr>
+                    <td>Номенклатура</td>
+                    <td>Кількість</td>
+                    <td>Сума</td>
+                    <td>Індекс товару</td>
+                </tr>
+                {% for product in products_balance %}
+                    <tr>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.quantity }}</td>
+                        <td>{{ product.price }}</td>
+                        <td>{{ product.index }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <a href="{% url 'main' %}">Назад</a>
+        </div>
+    </body>
+    {% load static %}
+    <script src="{% static '/scripts/main.js' %}"></script>
+</html>
