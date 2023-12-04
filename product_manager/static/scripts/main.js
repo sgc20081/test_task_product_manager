@@ -54,6 +54,42 @@ $(function(){
             columns_selector: '.service_output_columns_name',
             parent_container: document.querySelector('.service_output_forms_container')
         })
+
+        // Вывод суммы для форм продуктов
+        new PriceSum({
+            forms_selector: '.multi_form_product',
+            quantity_selector: '[name="quantity"]',
+            price_selector: '[name="price"]',
+            sum_price_selector: '[name="sum_price"]',
+            tax_rate_selector: '[name="tax_rate"]',
+            sum_tax_rate_selector: '[name="tax_rate_sum_price"]',
+            all_sum: document.querySelector('.all_sum_price'),
+            add_form_btn: document.querySelector('.add_form_product'),
+        })
+
+        // Вывод суммы для форм исходящих услуг
+        new PriceSum({
+            forms_selector: '.multi_form_service_input',
+            quantity_selector: '[name="quantity"]',
+            price_selector: '[name="price"]',
+            sum_price_selector: '[name="sum_price"]',
+            tax_rate_selector: '[name="tax_rate"]',
+            sum_tax_rate_selector: '[name="tax_rate_sum_price"]',
+            all_sum: document.querySelector('.all_sum_price'),
+            add_form_btn: document.querySelector('.add_form_service'),
+        })
+
+        // Вывод суммы для форм входящих услуг
+        new PriceSum({
+            forms_selector: '.multi_form_service_output',
+            quantity_selector: '[name="quantity"]',
+            price_selector: '[name="price"]',
+            sum_price_selector: '[name="sum_price"]',
+            // tax_rate_selector: '[name="tax_rate"]',
+            // sum_tax_rate_selector: '[name="tax_rate_sum_price"]',
+            all_sum: document.querySelector('.all_sum_price'),
+            add_form_btn: document.querySelector('.add_form_service'),
+        })
         
         if ($('#document').attr('document') == 'input'){
             // Класс, отвечающий за отправку нескольких форм в запросе при создании входящей 
@@ -301,6 +337,12 @@ class MultipleFormSend {
                     let data = {};
                     console.log(form);
 
+                    $.each($(form).find('input'), function(ind, field){
+                        if (field.disabled){
+                            field.disabled = false;
+                        }
+                    })
+                    
                     new FormData(form).forEach(function(value, key){
                         console.log('Key ', key)
                         console.log('Val ', value)
@@ -328,6 +370,7 @@ class MultipleFormSend {
             })
         }
         unpacking_html_collection(this.forms)
+        console.log('Сенд аякс: ', form_data)
         this.send_ajax(form_data)
     }
 
@@ -370,6 +413,86 @@ class MultipleFormSend {
                     return
                 }
             })
+        }
+    }
+}
+
+class PriceSum{
+    constructor(properties){
+        this.forms_selector = properties.forms_selector;
+
+        this.quantity_selector = properties.quantity_selector;
+        this.price_selector = properties.price_selector;
+        this.sum_price_selector = properties.sum_price_selector;
+
+        this.tax_rate_selector = properties.tax_rate_selector;
+        this.sum_tax_rate_selector = properties.sum_tax_rate_selector;
+
+        this.all_sum = $(properties.all_sum);
+
+        this.add_form_btn = $(properties.add_form_btn);
+
+        this.add_form_btn.on('click', this.get_elements.bind(this));
+        this.get_elements();
+    }
+
+    get_elements(){
+
+        let self = this;
+
+        let forms = $(this.forms_selector);
+
+        $.each(forms, function(ind, form){
+            form = $(form);
+            form.off('keyup').on('keyup', self.get_sum.bind(self, form));
+            form.off('click').on('click', self.get_sum.bind(self, form));
+        })
+    }
+
+    get_sum(form){
+
+        let quantity = form.find(this.quantity_selector);
+        let price = form.find(this.price_selector);
+        let sum_price = form.find(this.sum_price_selector);
+
+        let tax_rate = form.find(this.tax_rate_selector);
+        let sum_tax_rate = form.find(this.sum_tax_rate_selector)
+
+        if (quantity.val() != '' && price.val() != ''){
+            sum_price.html(quantity.val() * price.val());
+        }
+        else{
+            sum_price.html('-');
+        }
+
+        if (sum_price.html() != '-' && tax_rate.val() != ''){
+            sum_tax_rate.html(parseInt(sum_price.html())*tax_rate.val()/100);
+        }
+        else{
+            sum_tax_rate.html('-');
+        }
+
+        this.get_all_sum();
+    }
+
+    get_all_sum(){
+
+        let self = this
+
+        let sums = $(this.sum_price_selector);
+        let all_sum_val = 0;
+        
+        $.each(sums, function(ind, value){
+            if ($(value).html() != '-'){
+                all_sum_val += parseInt($(value).html());
+            }
+        })
+
+        if (all_sum_val == 0){
+            this.all_sum.val('');
+        }
+        else{
+            this.all_sum.val(all_sum_val);
         }
     }
 }

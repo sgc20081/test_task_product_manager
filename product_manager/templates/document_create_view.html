@@ -35,7 +35,7 @@
                         <td><input name="date" required="" id="id_date" type="date" value="{{ document_form.date.value }}"><br>{{ document_form.date.errors }}</td>
                         <td>{{ document_form.number }}<br>{{ document_form.number.errors }}</td>
                         <td>{{ document_form.operation }}<br>{{ document_form.operation.errors }}</td>
-                        <td>{{ document_form.sum }}<br>{{ document_form.sum.errors }}</td>
+                        <td><input class="all_sum_price" type="number" name="sum" step="0.01" required="" id="id_sum" value="{{document_form.sum.value}}" disabled><br>{{document_form.sum.errors}}</td>
                         <td>{{ document_form.currency }}<br>{{ document_form.currency.errors }}</td>
                         {% if document == 'input' %}
                             <td>{{ document_form.contractor }}<br>{{ document_form.contractor.errors }}</td>

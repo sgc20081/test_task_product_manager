@@ -22,7 +22,7 @@ class DocumentInput(models.Model):
     ]
 
     operation = models.CharField(max_length=300, choices=operation_options)
-    sum = models.DecimalField(max_digits=15, decimal_places=2)
+    sum = models.DecimalField(max_digits=15, decimal_places=2, null=True)
     currency = models.CharField(max_length=300)
     contractor = models.CharField(max_length=300)
     entry_date = models.DateTimeField(null=True, blank=True)
@@ -38,7 +38,7 @@ class DocumentOutput(models.Model):
     date = models.DateTimeField()
     number = models.CharField(max_length=300)
     operation = models.CharField(max_length=300)
-    sum = models.DecimalField(max_digits=15, decimal_places=2)
+    sum = models.DecimalField(max_digits=15, decimal_places=2, null=True)
     currency = models.CharField(max_length=300)
     organization = models.CharField(max_length=300)
     contract = models.CharField(max_length=300, null=True)
@@ -84,7 +84,6 @@ class ServiceOutput(models.Model):
     description = models.CharField(max_length=300)
     quantity = models.DecimalField(max_digits=15, decimal_places=3)
     price = models.DecimalField(max_digits=15, decimal_places=2)
-    # tax_rate = models.DecimalField(max_digits=3, decimal_places=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     discount = models.DecimalField(max_digits=15, decimal_places=2, null=True)
     bill = models.IntegerField(null=True)
     document_service_output = models.ForeignKey(DocumentOutput, related_name='service_output', on_delete=models.CASCADE, null=True, blank=True)

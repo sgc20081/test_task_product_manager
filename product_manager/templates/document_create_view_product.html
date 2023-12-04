@@ -23,9 +23,9 @@
         <div>{{ product_form.units }}</div>
         <div>{{ product_form.coefficient }}</div>
         <div>{{ product_form.price }}</div>
-        <div>сумма</div>
+        <div name="sum_price">-</div>
         <div>{{ product_form.tax_rate }}</div>
-        <div>сумма пдв</div>
+        <div name="tax_rate_sum_price">-</div>
         <div>{{ product_form.bill }}</div>
         <div>{{ product_form.product_index }}</div>
         <button class='delete_form'type="button">Видалити</button>
@@ -51,9 +51,9 @@
             <div>{{ product_form.units }}<br>{{ product_form.units.errors }}</div>
             <div>{{ product_form.coefficient }}<br>{{ product_form.coefficient.errors }}</div>
             <div>{{ product_form.price }}<br>{{ product_form.price.errors }}</div>
-            <div>сумма</div>
+            <div name="sum_price">-</div>
             <div>{{ product_form.tax_rate }}<br>{{ product_form.tax_rate.errors }}</div>
-            <div>сумма пдв</div>
+            <div name="tax_rate_sum_price">-</div>
             <div>{{ product_form.bill }}<br>{{ product_form.bill.errors }}</div>
             <div>{{ product_form.product_index }}<br>{{ product_form.product_index.errors }}</div>
             <button class='delete_form'type="button">Видалити</button>
@@ -61,7 +61,7 @@
         {% endfor %}
     {% endif %}
 </div>
-<button class="add_product_button">Додати товар</button>
+<button class="add_product_button add_form_product">Додати товар</button>
 <h2>Services</h2>
 {% if document == 'input' %}
     <div class="service_input_forms_container">
@@ -81,9 +81,9 @@
             <div>{{ service_input_form.nomenclature }}</div>
             <div>{{ service_input_form.quantity }}</div>
             <div>{{ service_input_form.price }}</div>
-            <div>сумма</div>
+            <div name="sum_price">-</div>
             <div>{{ service_input_form.tax_rate }}</div>
-            <div>сумма пдв</div>
+            <div name="tax_rate_sum_price">-</div>
             <div>{{ service_input_form.bill }}</div>
             <div>{{ service_input_form.sub_account }}</div>
             <button class='delete_form'type="button">Видалити</button>
@@ -105,9 +105,9 @@
                     <div>{{ service_input_form.nomenclature }}<br>{{ service_input_form.nomenclature.errors }}</div>
                     <div>{{ service_input_form.quantity }}<br>{{ service_input_form.quantity.errors }}</div>
                     <div>{{ service_input_form.price }}<br>{{ service_input_form.price.errors }}</div>
-                    <div>сумма</div>
+                    <div name="sum_price">-</div>
                     <div>{{ service_input_form.tax_rate }}<br>{{ service_input_form.tax_rate.errors }}</div>
-                    <div>сумма пдв</div>
+                    <div name="tax_rate_sum_price">-</div>
                     <div>{{ service_input_form.bill }}<br>{{ service_input_form.bille.errors }}</div>
                     <div>{{ service_input_form.sub_account }}<br>{{ service_input_form.sub_account.errors }}</div>
                     <button class='delete_form'type="button">Видалити</button>
@@ -115,7 +115,7 @@
             {% endfor %}
         {% endif %}
     </div>
-    <button class="add_service_input_button">Додати послугу</button>
+    <button class="add_service_input_button add_form_service">Додати послугу</button>
 {% elif document == 'output' %}
     <div class="service_output_forms_container">
         {% if service_output_form.0 is empty %}
@@ -134,7 +134,7 @@
                 <div>{{ service_output_form.description }}</div>
                 <div>{{ service_output_form.quantity }}</div>
                 <div>{{ service_output_form.price }}</div>
-                <div>сумма без знижки</div>
+                <div name="sum_price">-</div>
                 <div>{{ service_output_form.discount }}</div>
                 <div>{{ service_output_form.bill }}</div>
                 <button class='delete_form'type="button">Видалити</button>
@@ -156,7 +156,7 @@
                 <div>{{ service_output_form.description }}<br>{{ service_output_form.description.errors }}</div>
                 <div>{{ service_output_form.quantity }}<br>{{ service_output_form.quantity.errors }}</div>
                 <div>{{ service_output_form.price }}<br>{{ service_output_form.price.errors }}</div>
-                <div>сумма без знижки</div>
+                <div name="sum_price">-</div>
                 <div>{{ service_output_form.discount }}<br>{{ service_output_form.discount.errors }}</div>
                 <div>{{ service_output_form.bill }}<br>{{ service_output_form.bill.errors }}</div>
                 <button class='delete_form'type="button">Видалити</button>
@@ -164,7 +164,7 @@
         {% endfor %}
     {% endif %}
     </div>
-    <button class="add_service_output_button">Додати послугу</button>
+    <button class="add_service_output_button add_form_service">Додати послугу</button>
 {% endif %}
 
 {% endblock %}
