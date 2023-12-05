@@ -1,0 +1,1 @@
+web: gunicorn test_task_product_manager.wsgi
