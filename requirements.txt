@@ -2,3 +2,4 @@
 django==4.2.7
 gunicorn==21.2.0
 WhiteNoise==6.6.0
+django-sslserver==0.22

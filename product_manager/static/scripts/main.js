@@ -30,7 +30,7 @@ $(function(){
 
         // Создание нескольких копий форм ПОД ТОВАРЫ, на основе формы ДЛЯ ТОВАРОВ, приходящей с сервера 
         new MultipleForm({
-            form: document.getElementById('product'), 
+            object: document.getElementById('product'), 
             add_form_btn: document.querySelector('.add_product_button'),
             del_form_btn_selector: '.delete_form',
             columns_selector: '.product_columns_name',
@@ -89,6 +89,14 @@ $(function(){
             // sum_tax_rate_selector: '[name="tax_rate_sum_price"]',
             all_sum: document.querySelector('.all_sum_price'),
             add_form_btn: document.querySelector('.add_form_service'),
+        })
+
+        // Вывод суммы для форм входящих услуг
+        new PriceSumStatic({
+            object_selector: '.product_view',
+            quantity_selector: '[name="quantity"]',
+            price_selector: '[name="price"]',
+            sum_price_selector: '[name="sum_price"]',
         })
         
         if ($('#document').attr('document') == 'input'){
@@ -494,5 +502,34 @@ class PriceSum{
         else{
             this.all_sum.val(all_sum_val);
         }
+    }
+}
+
+class PriceSumStatic extends PriceSum{
+    constructor(properties){
+        super(properties)
+        this.object_selector = properties.object_selector;
+
+        this.get_elements()
+    }
+
+    get_elements(){
+
+        let self = this;
+
+        let object = $(this.object_selector);
+
+        $.each(object, function(ind, obj){
+            obj = $(obj);
+            self.get_sum(obj);
+        })
+    }
+
+    get_sum(obj){
+        let quantity = obj.find(this.quantity_selector);
+        let price = obj.find(this.price_selector);
+        let sum_price = obj.find(this.sum_price_selector);
+
+        sum_price.html(parseInt(quantity.html())*parseInt(price.html()))
     }
 }

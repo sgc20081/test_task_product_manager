@@ -10,6 +10,7 @@
                 <tr>
                     <td>Номенклатура</td>
                     <td>Кількість</td>
+                    <td>Ціна</td>
                     <td>Сума</td>
                     <td>Індекс товару</td>
                 </tr>
@@ -18,10 +19,11 @@
                         <td style="font-weight: bold;">{{ storage }}</td>
                     </tr>
                     {% for product in products %}
-                    <tr>
+                    <tr class="product_view">
                         <td>{{ product.name }}</td>
-                        <td>{{ product.quantity }}</td>
-                        <td>{{ product.price }}</td>
+                        <td name="quantity">{{ product.quantity }}</td>
+                        <td name="price">{{ product.price }}</td>
+                        <td name="sum_price"></td>
                         <td>{{ product.index }}</td>
                     </tr>
                     {% endfor %}
