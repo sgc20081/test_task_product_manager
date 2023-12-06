@@ -759,9 +759,12 @@ class DocumentOutputMultiForms(MultiForms):
                 print('Товара не хватает на складе')
                 form_obj = self.forms[form]
                 form_obj = GeneralFormViewClassy.check_valid(form=form_obj, data=fields)
-                form_obj['errors'].add_error('quantity', 'Не хватает товара на складе')
-
-                return form_obj
+                if 'errors' in form_obj:
+                    form_obj['errors'].add_error('quantity', 'Не хватает товара на складе')
+                    return form_obj
+                else:
+                    form_obj.add_error('quantity', 'Не хватает товара на складе')
+                    return {'errors': form_obj}
             else:
                 self.product_balance_parameters.append({
                     'queryset': queryset,
