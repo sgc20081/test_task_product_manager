@@ -16,9 +16,9 @@ class DocumentInput(models.Model):
     number = models.CharField(max_length=300)
 
     operation_options = [
-        ('option_1', 'Покупка, комісія'),
-        ('option_2', 'Об\'єкти будівництва'),
-        ('option_2', 'У переробку'),
+        ('Покупка, комісія', 'Покупка, комісія'),
+        ('Об\'єкти будівництва', 'Об\'єкти будівництва'),
+        ('У переробку', 'У переробку'),
     ]
 
     operation = models.CharField(max_length=300, choices=operation_options)
@@ -37,7 +37,14 @@ class DocumentOutput(models.Model):
 
     date = models.DateTimeField()
     number = models.CharField(max_length=300)
-    operation = models.CharField(max_length=300)
+
+    operation_options = [
+        ('Покупка, комісія', 'Покупка, комісія'),
+        ('Об\'єкти будівництва', 'Об\'єкти будівництва'),
+        ('У переробку', 'У переробку'),
+    ]
+
+    operation = models.CharField(max_length=300, choices=operation_options)
     sum = models.DecimalField(max_digits=15, decimal_places=2, null=True)
     currency = models.CharField(max_length=300)
     organization = models.CharField(max_length=300)
