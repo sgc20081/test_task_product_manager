@@ -56,7 +56,7 @@
                     </tr>
                     {% for document in documents %}
                     <tr>
-                        <td>{{ document.date }}</td>
+                        <td>{{ document.date|date:"d.m.Y H:i" }}</td>
                         {% if document_type == 'input' %}
                         <td><a href="{% url 'document_input_view' document.id %}">
                             {{ document.number }}</a>

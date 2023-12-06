@@ -26,7 +26,7 @@
                         <td>Склад</td>
                     </tr>
                     <tr>
-                        <td>{{ document.date }}</td>
+                        <td>{{ document.date|date:"d.m.Y H:i" }}</td>
                         <td>{{ document.number }}</td>
                         <td>{{ document.operation }}</td>
                         <td>{{ document.sum }}</td>
