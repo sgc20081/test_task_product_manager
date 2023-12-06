@@ -30,7 +30,7 @@ $(function(){
 
         // Создание нескольких копий форм ПОД ТОВАРЫ, на основе формы ДЛЯ ТОВАРОВ, приходящей с сервера 
         new MultipleForm({
-            object: document.getElementById('product'), 
+            form: document.getElementById('product'), 
             add_form_btn: document.querySelector('.add_product_button'),
             del_form_btn_selector: '.delete_form',
             columns_selector: '.product_columns_name',
@@ -267,6 +267,7 @@ class MultipleForm{
 
         this.add_form_btn.on('click', this.copy_form.bind(this))
         console.log('Кнопка добавления формы: ', this.add_form_btn)
+        console.log('Форма: ', this.form)
     }
 
     add_form_btn_event(){
