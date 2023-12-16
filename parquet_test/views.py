@@ -5,6 +5,8 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pandas as pd
 
+import base64
+
 # Create your views here.
 
 def parquet_get_test(request, *args, **kwargs):
@@ -23,8 +25,10 @@ def parquet_get_test(request, *args, **kwargs):
     pq.write_table(table, buffer)
 
     # Получить строку из буфера
-    parquet_string = buffer.getvalue().to_pybytes().decode('latin-1')
+    buffer = buffer.getvalue()
+
+    parquet_string = base64.b64encode(buffer).decode('utf-8')
 
     print(parquet_string)
 
-    return HttpResponse(parquet_string)
+    return HttpResponse(parquet_string, content_type='text/plain')
