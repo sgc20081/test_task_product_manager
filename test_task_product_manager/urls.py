@@ -20,5 +20,6 @@ from django.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('product_manager.urls'))
+    path('', include('product_manager.urls')),
+    path('parquet/', include('parquet_test.urls')),
 ]
