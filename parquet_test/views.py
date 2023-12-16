@@ -16,16 +16,17 @@ def parquet_get_test(request, *args, **kwargs):
 
     data = {'column1': [1, 2, 3], 'column2': ['A', 'B', 'C'], 'column3': ['q', 'w', 'e']}
     
-    table = pa.Table.from_pydict(data)
+    df = pd.DataFrame(data)
 
-    # Записываем таблицу в поток.
-    stream = io.BytesIO()
-    pq.write_table(table, stream)
+    # Преобразуйте DataFrame в таблицу PyArrow
+    table = pa.Table.from_pandas(df)
 
-    # Возвращаем строку из потока.
-    stream.getvalue()
-    string_parquet = stream.getvalue()
+     # Создаем буфер для записи Parquet-файла
+    buf = io.BytesIO()
+    # Записываем таблицу в формат Parquet в буфер
+    pq.write_table(table, buf)
 
-    # print(parquet_string)
+    # Получаем содержимое буфера
+    buffer = buf.getvalue()
 
-    return HttpResponse(string_parquet)
+    return HttpResponse(buffer)
