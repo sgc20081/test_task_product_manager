@@ -25,7 +25,7 @@ def parquet_get_test(request, *args, **kwargs):
     pq.write_table(table, buffer)
     
     # Получить строку из буфера
-    buffer = buffer.getvalue()
+    buffer = buffer.getvalue().to_pybytes()
     # file = pq.ParquetFile(buffer)
     # print(file)
     # parquet_string = base64.b64encode(file).decode('utf-8')
