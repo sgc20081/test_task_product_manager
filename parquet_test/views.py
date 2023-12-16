@@ -23,12 +23,13 @@ def parquet_get_test(request, *args, **kwargs):
 
     buffer = pa.BufferOutputStream()
     pq.write_table(table, buffer)
-
+    
     # Получить строку из буфера
     buffer = buffer.getvalue()
+    # file = pq.ParquetFile(buffer)
+    # print(file)
+    # parquet_string = base64.b64encode(file).decode('utf-8')
 
-    parquet_string = base64.b64encode(buffer).decode('utf-8')
+    # print(parquet_string)
 
-    print(parquet_string)
-
-    return HttpResponse(parquet_string, content_type='text/plain')
+    return HttpResponse(buffer, content_type='text/plain')
