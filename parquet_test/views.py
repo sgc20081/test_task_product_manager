@@ -23,7 +23,7 @@ def parquet_get_test(request, *args, **kwargs):
     pq.write_table(table, buffer)
 
     # Получить строку из буфера
-    parquet_string = buffer.getvalue().to_pybytes()
+    parquet_string = buffer.getvalue().decode('latin1')
 
     print(parquet_string)
 
